@@ -30,3 +30,5 @@ Route::post('/create-message', [App\Http\Controllers\MessageController::class, '
 Route::get('/delete-message/{id}', [App\Http\Controllers\MessageController::class, 'deleteMessage'])->middleware(['auth'])->name('delete');
 Route::get('/edit-message/{id}', [App\Http\Controllers\MessageController::class, 'editMessage'])->middleware(['auth'])->name('edit');
 Route::post('/edit-message/{id}', [App\Http\Controllers\MessageController::class, 'editMessage'])->middleware(['auth'])->name('edit');
+Route::get('/reply-to-message/{id}', [App\Http\Controllers\MessageController::class, 'replyToMessage'])->middleware(['auth'])->name('reply');
+Route::post('/reply-to-message', [App\Http\Controllers\MessageController::class, 'replyToMessage'])->middleware(['auth'])->name('reply');

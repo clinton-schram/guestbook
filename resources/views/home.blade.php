@@ -26,13 +26,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach ($messages as $message)
-                                <tr>
-                                    <td>{{ $message->body }}</td>
-                                    <td><a class="btn btn-secondary" href="/edit-message/{{ $message->id }}">edit</a></td>
-                                    <td><a class="btn btn-danger" href="/delete-message/{{ $message->id }}">delete</a></td>
-                                </tr>
-                            @endforeach
+                           
+                            @include('layouts.message-row', ['messages' => $messages, 'count' => 0]);
+                           
                             </tbody>
                         </table>
                         <a class="btn btn-primary" href="/create-message">Create Message</a>
