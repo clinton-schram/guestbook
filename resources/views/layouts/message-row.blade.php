@@ -1,16 +1,17 @@
 @foreach ($messages as $message)
-    <tr>
-
-        @for ($i = 0; $i <= $count; $i++)
-            <td>{{$i}}</td>
-        @endfor
-        <td>{{ $message['body'] }}</td>
+    <tr>      
         <td>
-        <a class="btn btn-secondary" href="/edit-message/{{ $message['id'] }}">edit</a>
-        <a class="btn btn-danger" href="/delete-message/{{ $message['id'] }}">delete</a>
-        @if ($level == 0)
-        <a class="btn btn-success" href="/reply-to-message/{{ $message['id'] }}">reply</a>
-        @endif
+            @for ($i = 0; $i <= $count; $i++)
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            @endfor
+            {{ $message['body'] }}
+        </td>
+        <td>
+            <a class="btn btn-secondary" href="/edit-message/{{ $message['id'] }}">edit</a>
+            <a class="btn btn-danger" href="/delete-message/{{ $message['id'] }}">delete</a>
+            @if ($level == 0)
+            <a class="btn btn-success" href="/reply-to-message/{{ $message['id'] }}">reply</a>
+            @endif
         </td>
     </tr>
 

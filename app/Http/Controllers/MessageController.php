@@ -72,7 +72,7 @@ class MessageController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show add a new message.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -92,7 +92,7 @@ class MessageController extends Controller
     }
     
     /**
-     * Show the application dashboard.
+     * edit an existing message.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -108,7 +108,7 @@ class MessageController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * delete a message.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -119,6 +119,12 @@ class MessageController extends Controller
         return redirect()->route('home');
     }
     
+
+    /**
+     * admin reply to message.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function replyToMessage(Request $request)
     {
         
