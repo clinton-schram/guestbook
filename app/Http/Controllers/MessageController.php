@@ -32,43 +32,12 @@ class MessageController extends Controller
             $messages = Message::where('user_id', $userId)->get()->sortBy('reply_to_id');
         }
         else {
-            $messages = Message::all()->sortBy('reply_to_id');    
+            $messages = Message::all();    
         }
         
-        $arr = [];
-        foreach($messages as $message) {
-            
-            if($message->reply_to_id === null)
-            {
-                $line = [
-                    "body" => $message->body,
-                    'reply_to_id' => null,
-                    'id' => $message->id,
-                ];
-                array_push($arr, $line);
-            }
-            else {
-                foreach($arr as $key=>$rootMessage) {
-                    if($rootMessage['id'] === $message->reply_to_id)
-                    {
-                        $line = [
-                            "body" => $message->body,
-                            'reply_to_id' => null,
-                            'id' => $message->id,
-                        ];
-                        
-                       $arr[$key]['messages'][0] = $line;
-
-                   //     array_push($arr[$key], $line);
-                        
-                    }
-                }
-            }
-            
-        }
-   
-
-        return view('home', ['messages'=> $arr, 'level' => $user->level]);
+        $arr = $this->buildTree($messages->toArray() , 0);
+    
+        return view('home', ['messages'=> $arr, 'level' => $user->level, 'user_id' => $user->id]);
     }
 
     /**
@@ -104,7 +73,7 @@ class MessageController extends Controller
             $message->save();
             return redirect()->route('home');
         }
-        return view('message.edit', ['message' => $message ]);
+        return view('message.edit', ['message' => $message]);
     }
 
     /**
@@ -114,11 +83,24 @@ class MessageController extends Controller
      */
     public function deleteMessage(Request $request)
     {
-        $message = Message::find($request->id);
-        $message->delete();
+        $this->deleteMessageRecursive($request->id);
         return redirect()->route('home');
     }
     
+    private function deleteMessageRecursive($messageId)
+    {
+        $messages = Message::all()->where('reply_to_id' , $messageId);
+        if(!empty($messages)) {
+            foreach($messages as $message) {
+                $this->deleteMessageRecursive($message->id);
+            }
+        } else {
+            $message->delete();
+        }
+
+        $message = Message::find($request->id);
+        $message->delete();
+    }
 
     /**
      * admin reply to message.
@@ -140,7 +122,32 @@ class MessageController extends Controller
             
         }
         $message = Message::find($request->id);
-        return view('message.reply', ['message' => $message ]);
+        return view('message.reply', ['message' => $message]);
+    }
+
+    /**
+     * build a recursive message tree
+     *
+     * @return array
+     */
+    function buildTree(array $elements, $parentId = 0) {
+    
+        $branch = array();
+    
+        foreach ($elements as $element) 
+        {
+            if ($element['reply_to_id'] == $parentId) 
+            {
+                $children = $this->buildTree($elements, $element['id']);
+                if ($children) 
+                {
+                    $element['messages'] = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+    
+        return $branch;
     }
 
 
